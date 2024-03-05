@@ -25,4 +25,18 @@ public class AnimalsController: Controller
         }
         return Ok(matchingAnimal);
     }
+
+
+         [HttpGet("?page={page}")]
+        public IActionResult GetByPage([FromRoute] int page = 0)
+        {
+            const int PageSize = 20;
+            var animalsList = _zoo.Animals.ToList();
+            // booksList = booksList.OrderBy(title => title.BookTitle).ToList();
+            var count = animalsList.Count();
+            var animalsData = animalsList.Skip(page * PageSize).Take(PageSize).ToList();
+            // ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
+            // ViewBag.Page = page;
+            return Ok(animalsData);
+        }
 }
