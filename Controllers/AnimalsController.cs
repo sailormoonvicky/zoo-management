@@ -27,16 +27,31 @@ public class AnimalsController: Controller
     }
 
 
-         [HttpGet("?page={page}")]
-        public IActionResult GetByPage([FromRoute] int page = 0)
+        //  [HttpGet("/page={page}")]
+        // public IActionResult GetByPage([FromRoute] int page = 0)
+        // {
+        //     const int PageSize = 2;
+        //     var animalsList = _zoo.Animals.ToList();
+        //     var count = animalsList.Count();
+        //     var animalsData = animalsList.Skip(page * PageSize).Take(PageSize).ToList();
+        //     return Ok(animalsData);
+        // }
+
+        [HttpGet("/{page}&size={PageSize}")]
+        public IActionResult GetByPageAndSize([FromRoute] int page = 0, int PageSize=10)
         {
-            const int PageSize = 20;
-            var animalsList = _zoo.Animals.ToList();
-            // booksList = booksList.OrderBy(title => title.BookTitle).ToList();
+            // PageSize = 2;
+            //var defaultPageSize = PageSize==null?3:PageSize;
+            var animalsList = _zoo.Animals.Include(animal => animal.Species).ToList();
             var count = animalsList.Count();
             var animalsData = animalsList.Skip(page * PageSize).Take(PageSize).ToList();
-            // ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
-            // ViewBag.Page = page;
             return Ok(animalsData);
         }
 }
+
+// 1. ? in the end point
+// 2. required parameters and optional parameters
+// 3. why GetByPage and GetByPageAndSize don't work at same time?
+// 4. How to oderby/sort?
+// 5. how to handle with enums in the csv conversion?
+// 6. Create "Enclosure" property in Animal and randomly assign an enclosure (list?)?
