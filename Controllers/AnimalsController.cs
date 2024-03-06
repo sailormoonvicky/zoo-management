@@ -37,14 +37,17 @@ public class AnimalsController: Controller
         //     return Ok(animalsData);
         // }
 
-        [HttpGet("/{page}&size={PageSize}")]
-        public IActionResult GetByPageAndSize([FromRoute] int page = 0, int PageSize=10)
+        [HttpGet]
+        public IActionResult GetByPageAndSize([FromQuery] int page = 1, int pageSize=10)
         {
             // PageSize = 2;
             //var defaultPageSize = PageSize==null?3:PageSize;
-            var animalsList = _zoo.Animals.Include(animal => animal.Species).ToList();
-            var count = animalsList.Count();
-            var animalsData = animalsList.Skip(page * PageSize).Take(PageSize).ToList();
+            var animalsList = _zoo.Animals.Include(animal => animal.Species)
+                                          .OrderBy(animal => animal.Species.Name)
+                                          .ThenBy(animal => animal.Name)
+                                          .ToList();
+            // var count = animalsList.Count;
+            var animalsData = animalsList.Skip((page-1 )* pageSize).Take(pageSize).ToList();
             return Ok(animalsData);
         }
 }
@@ -54,4 +57,4 @@ public class AnimalsController: Controller
 // 3. why GetByPage and GetByPageAndSize don't work at same time?
 // 4. How to oderby/sort?
 // 5. how to handle with enums in the csv conversion?
-// 6. Create "Enclosure" property in Animal and randomly assign an enclosure (list?)?
+// 6. Create "Enclosure" property in Animal and randomly assign an enclosure (list?)? - Class enclosure with id

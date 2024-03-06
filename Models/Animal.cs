@@ -18,5 +18,8 @@ public class Animal
 
     public required DateOnly DateOfAcquisition { get; set;}
 
-
+    public int EnclosureId { get; set;}
+    // [ForeignKey("EnclosureId")]
+    [ForeignKey(nameof(EnclosureId))]
+    public Enclosure Enclosure { get; set;} = null!;
 }
